@@ -36,62 +36,87 @@ document.getElementById("toggle-content").addEventListener("click", function () 
 
 
 
+
 /** =====================================================
- *  Timer Countdown
-  ======================================================= */
+ *  Timer Countdown (ISO +08:00 / MYT)
+  ====================================================== */
+
+// Tetapan masa majlis (MYT, GMT+8)
+const START_ISO = "2026-04-05T11:00:00+08:00"; // 05 Apr 2026 11:00 pagi MYT
+const END_ISO   = "2026-04-05T16:00:00+08:00"; // 05 Apr 2026 16:00 petang MYT
+
+// Tukar ke timestamp (ms)
+const START_MS = new Date(START_ISO).getTime();
+const END_MS   = new Date(END_ISO).getTime();
 
 function setupCountdown(campaignSelector, startTimeMillis, endTimeMillis) {
-    var second = 1000;
-    var minute = second * 60;
-    var hour = minute * 60;
-    var day = hour * 24;
+  const second = 1000, minute = 60 * second, hour = 60 * minute, day = 24 * hour;
 
-    function calculateRemaining() {
-        var now = new Date().getTime();
-        return now >= startTimeMillis && now < endTimeMillis ? endTimeMillis - now : 0;
+  const root    = document.querySelector(campaignSelector);
+  if (!root) return;
+
+  const elDay    = root.querySelector(".day");
+  const elHour   = root.querySelector(".hour");
+  const elMinute = root.querySelector(".minute");
+  const elSecond = root.querySelector(".second");
+  const titleEl  = root.querySelector(".timer .title");
+
+  let prevGap = null;
+  let didRefresh = false;
+
+  const pad2 = (n) => String(n).padStart(2, "0");
+
+  function render(diffMs) {
+    const d = Math.floor(diffMs / day);
+    const h = Math.floor((diffMs % day) / hour);
+    const m = Math.floor((diffMs % hour) / minute);
+    const s = Math.floor((diffMs % minute) / second);
+
+    if (elDay)    elDay.textContent    = d;
+    if (elHour)   elHour.textContent   = pad2(h);
+    if (elMinute) elMinute.textContent = pad2(m);
+    if (elSecond) elSecond.textContent = pad2(s);
+  }
+
+  function tick() {
+    const now = Date.now();
+
+    let gap, phase;
+    if (now < startTimeMillis) {
+      gap = startTimeMillis - now; phase = "pre";
+    } else if (now >= startTimeMillis && now <= endTimeMillis) {
+      gap = endTimeMillis - now;   phase = "live";
+    } else {
+      gap = 0;                      phase = "post";
     }
 
-    var didRefresh = false;
-    var previousGap = calculateRemaining();
+    // Opsyen: auto-refresh bila masuk 1 hari terakhir atau tamat (elak state stale)
+    const needRefresh = (prevGap !== null) && (
+      (prevGap > day && gap <= day) || (prevGap > 0 && gap === 0)
+    );
+    prevGap = gap;
 
-    function countdown() {
-        var gap = calculateRemaining();
-        var shouldRefresh = previousGap > day && gap <= day || previousGap > 0 && gap === 0;
+    render(gap);
 
-        previousGap = gap;
-
-        var textDay = Math.floor(gap / day);
-        var textHour = Math.floor((gap % day) / hour);
-        var textMinute = Math.floor((gap % hour) / minute);
-        var textSecond = Math.floor((gap % minute) / second);
-
-        if (document.querySelector(campaignSelector + ' .timer')) {
-            document.querySelector(campaignSelector + ' .day').innerText = textDay;
-            document.querySelector(campaignSelector + ' .hour').innerText = textHour;
-            document.querySelector(campaignSelector + ' .minute').innerText = textMinute;
-            document.querySelector(campaignSelector + ' .second').innerText = textSecond;
-        }
-
-        if (shouldRefresh && !didRefresh) {
-            didRefresh = true;
-            setTimeout(function () {
-                window.location.reload();
-            }, 30000 + Math.random() * 90000);
-        }
+    if (titleEl) {
+      titleEl.textContent =
+        phase === "pre"  ? "Menghitung hari" :
+        phase === "live" ? "Majlis sedang berlangsung" :
+                           "Majlis telah selesai. Terima kasih hadir! 💐";
     }
 
-    countdown();
-    setInterval(countdown, 1000);
+    if (needRefresh && !didRefresh) {
+      didRefresh = true;
+      setTimeout(() => window.location.reload(), 30000 + Math.random() * 90000);
+    }
+  }
+
+  tick();
+  setInterval(tick, 1000);
 }
 
-document.addEventListener("DOMContentLoaded", function (event) {
-    if (!document.querySelectorAll || !document.body.classList) {
-        return;
-    }
-
-});
-
-setupCountdown(".campaign-0", new Date().getMilliseconds(), 1924920000000);
+// PANGGIL COUNTDOWN DENGAN ISO +08:00
+setupCountdown(".campaign-0", START_MS, END_MS);
 
 
 
