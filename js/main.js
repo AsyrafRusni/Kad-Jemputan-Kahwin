@@ -102,8 +102,8 @@ setupCountdown(".campaign-0", new Date().getMilliseconds(), 1924920000000);
   ======================================================= */
 const event = {
     title: "Jemputan Kenduri Kahwin Asyraf & Mardiana",
-    startDate: "20260405110000Z", // YYYYMMDDTHHmmssZ (UTC)
-    endDate: "20260405160000Z",
+    startDate: "2026-04-05T11:00:00+08:00", // YYYYMMDDTHHmmssZ (UTC)
+    endDate: "2026-04-05T16:00:00+08:00",
     location: "Lot 8365, Kampung Kubang Halban, Kuala Kangsar, Perak.",
     description: "Kami menjemput tuan/puan hadir ke majlis perkahwinan anakanda kami.",
 };
