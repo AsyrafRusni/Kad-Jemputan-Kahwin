@@ -101,10 +101,10 @@ setupCountdown(".campaign-0", new Date().getMilliseconds(), 1924920000000);
  *  Add to Calendar
   ======================================================= */
 const event = {
-    title: "Jemputan Kenduri Kahwin John & Sarah",
-    startDate: "99991231T033000Z", // YYYYMMDDTHHmmssZ (UTC)
-    endDate: "99991231T090000Z",
-    location: "10A Jalan Seri Ampang 2, Kampung Pisang, 47300 Subang, Selangor, Malaysia",
+    title: "Jemputan Kenduri Kahwin Asyraf & Mardiana",
+    startDate: "20260405110000Z", // YYYYMMDDTHHmmssZ (UTC)
+    endDate: "20260405160000Z",
+    location: "Lot 8365, Kampung Kubang Halban, Kuala Kangsar, Perak.",
     description: "Kami menjemput tuan/puan hadir ke majlis perkahwinan anakanda kami.",
 };
 
@@ -172,16 +172,16 @@ function addAppleCalendar() {
  *  Location for Google and Waze
   ======================================================= */
 function openGoogleMaps() {
-    const latitude = 3.1575;  // Example latitude
-    const longitude = 101.7116;  // Example longitude
+    const latitude = 4.826087904409569;  // Example latitude
+    const longitude = 100.94944157744861;  // Example longitude
     const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}&travelmode=driving`;
 
     window.open(googleMapsUrl, "_blank");  // Open in a new tab
 }
 
 function openWaze() {
-    const latitude = 3.1575;  // Example latitude
-    const longitude = 101.7116;  // Example longitude
+    const latitude = 4.826087904409569;  // Example latitude
+    const longitude = 100.94944157744861;  // Example longitude
     //const wazeUrl = `https://waze.com/ul?ll=${latitude},${longitude}&navigate=yes`;
     const wazeUrl = `waze://?ll=${latitude},${longitude}&navigate=yes`
 
